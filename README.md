@@ -48,30 +48,33 @@ You can then perform interactions with the API using the methods.
 
 // include composer's autoloader (this'll vary depending on your application)
 // presuming this file is in a "webroot" type folder...
-include(__DIR__.'/../vendor/autoload.php');
+include(__DIR__ . '/../vendor/autoload.php');
 
 use FortyTwoStudio\WebFactionPHP\WebFactionClient;
 use FortyTwoStudio\WebFactionPHP\WebFactionException;
 
-class MyAwesomeClass {
+class MyAwesomeClass
+{
 
     public function createDatabase($username = "new_db_user", $dbname = "my_new_db")
     {
-        try {
+        try
+        {
             // create a connection to the API, use your own credentials here, obvs
-            $wf         = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE');
+            $wf = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE');
 
             // static method to generate random strings of given length
-            $db_pass    = WebFactionClient::generatePassword(21);
+            $db_pass = WebFactionClient::generatePassword(21);
 
             // https://docs.webfaction.com/xmlrpc-api/apiref.html#method-create_db
-            $database   = $wf->createDb($dbname, 'mysql', $db_pass, $username);
+            $database = $wf->createDb($dbname, 'mysql', $db_pass, $username);
 
             // https://docs.webfaction.com/xmlrpc-api/apiref.html#method-change_db_user_password
             //otherwise it doesn't seem to use it. Possibly because we're creating the user at the same time as the DB above
             $wf->changeDbUserPassword($username, $db_pass, 'mysql');
 
-        } catch(WebFactionException $e) {
+        } catch (WebFactionException $e)
+        {
             // Something went wrong, find out what with $e->getMessage() but be warned, WebFaction exception messages are often
             // vague and unhelpful!
             return "rut roh, this went wrong: " . $e->getMessage();
