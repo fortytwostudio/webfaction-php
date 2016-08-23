@@ -86,7 +86,7 @@ class MyAwesomeClass
 
 }
 
-echo (new MyAwesomeClass())->createDatabase();
+echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the credentials in this example => rut roh, this went wrong: LoginError
 ```
 ###Changelog
 
