@@ -1,0 +1,25 @@
+{
+  "name": "fortytwo-studio/webfaction-php",
+  "description": "PHP wrapper for the Webfaction XML-RPC API",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Billy Fagan",
+      "email": "billy@fortytwo.studio"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/fortytwostudio/webfaction-php"
+    }
+  ],
+  "require": {
+    "phpxmlrpc/phpxmlrpc": "4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "fortytwostudio\\webfactionphp" : "src"
+    }
+  }
+}
