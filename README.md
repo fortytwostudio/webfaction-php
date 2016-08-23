@@ -10,7 +10,7 @@ Install using composer
 
 or add to your composer.json file's "require" section
 
-```
+```json
   "require": {
      "fortytwo-studio/webfaction-php": "dev-master",
    }
@@ -25,7 +25,7 @@ This is a PHP wrapper for interacting with the WebFaction XMLRPC API. It's extre
 
 include the client in your project class.
 
-```
+```php
 <?php
     use FortyTwoStudio\WebFactionPHP\WebFactionClient;
     use FortyTwoStudio\WebFactionPHP\WebFactionException;
@@ -36,14 +36,14 @@ include the client in your project class.
 ```
 
 To create a connection to the API new up an instance of the WebFactionClient with your API credentials:
-```
+```php
     $wf = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE');
 ```
 
 You can then perform interactions with the API using the methods.
 
 ##Example - Provision a new mysql database and user
-```
+```php
 <?php
 
 use FortyTwoStudio\WebFactionPHP\WebFactionClient;
