@@ -1,6 +1,6 @@
 <?php
 
-namespace fortytwostudio\webfactionphp;
+namespace FortyTwoStudio\WebFactionPHP;
 
 /**
  * WebFactionClient
@@ -704,8 +704,14 @@ class WebFactionClient
      * @param int $length
      * @return string
      */
-    public function generatePassword($length = 42)
+    public static function generatePassword($length = 42)
     {
-        return str_random($length);
+        $string = '';
+        while (($len = strlen($string)) < $length) {
+            $size = $length - $len;
+            $bytes = random_bytes($size);
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        }
+        return $string;
     }
 }

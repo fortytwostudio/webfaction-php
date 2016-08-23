@@ -1,6 +1,6 @@
 <?php
 
-namespace fortytwostudio\webfactionphp;
+namespace FortyTwoStudio\WebFactionPHP;
 
 use Exception;
 
