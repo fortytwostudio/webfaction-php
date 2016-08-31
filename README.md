@@ -6,7 +6,7 @@ Simple PHP wrapper for the [WebFaction XMLRPC API](https://docs.webfaction.com/x
 
 Install using composer
 
-`composer require fortytwo-studio/webfaction-php`
+`composer require fortytwo-studio/webfaction-php dev-master`
 
 or add to your composer.json file's "require" section
 
