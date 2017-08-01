@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/fortytwostudio/webfaction-php.svg?branch=master)](https://travis-ci.org/fortytwostudio/webfaction-php)
 # webfaction-php
 Simple PHP wrapper for the [WebFaction XMLRPC API](https://docs.webfaction.com/xmlrpc-api/apiref.html)
 
