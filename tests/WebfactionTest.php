@@ -1,13 +1,15 @@
 <?php
+
 use FortyTwoStudio\WebFactionPHP\WebFactionClient;
 use FortyTwoStudio\WebFactionPHP\WebFactionException;
+use PHPUnit\Framework\TestCase;
 
-class WebfactionTest extends PHPUnit_Framework_TestCase {
+class WebfactionTest extends TestCase {
 
     public function testThrowsExceptionOnBadCredentials()
     {
         $this->expectException(WebFactionException::class);
-        $wf = new WebFactionClient('junk-username', 'junk-password','junk-machine');
+        new WebFactionClient('junk-username', 'junk-password','junk-machine');
     }
 
     public function testCanGenerateARandomLengthPassword()
