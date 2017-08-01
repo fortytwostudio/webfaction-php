@@ -3,7 +3,7 @@
 Simple PHP wrapper for the [WebFaction XMLRPC API](https://docs.webfaction.com/xmlrpc-api/apiref.html)
 
 
-##Installation
+## Installation
 
 Install using composer
 
@@ -18,11 +18,11 @@ or add to your composer.json file's "require" section
 ```
 (don't forget to run `composer install` or `composer update`)
 
-##Overview
+## Overview
 
 This is a PHP wrapper for interacting with the WebFaction XMLRPC API. It's extremely thin, methods follow the naming conventions(camelCase rather than snake_case) and parameter ordering (ignoring session_id) of the [XMLRPC API](https://docs.webfaction.com/xmlrpc-api/apiref.html)
 
-##Usage
+## Usage
 
 include the client in your project class.
 
@@ -43,7 +43,7 @@ To create a connection to the API new up an instance of the WebFactionClient wit
 
 You can then perform interactions with the API using the methods.
 
-##Example - Provision a new mysql database and user
+## Example - Provision a new mysql database and user
 ```php
 <?php
 
@@ -89,6 +89,10 @@ class MyAwesomeClass
 
 echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the credentials in this example => rut roh, this went wrong: LoginError
 ```
-###Changelog
+### Changelog
+#### 01/Aug/2017 - 1.0.0
+* update phpunit 
+* travis CI build integration
+* update ReadMe
 
-23/Aug/2016 - initial release.
+#### 23/Aug/2016 - initial release.
