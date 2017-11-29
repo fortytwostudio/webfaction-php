@@ -7,13 +7,13 @@ Simple PHP wrapper for the [WebFaction XMLRPC API](https://docs.webfaction.com/x
 
 Install using composer
 
-`composer require fortytwo-studio/webfaction-php dev-master`
+`composer require fortytwo-studio/webfaction-php`
 
 or add to your composer.json file's "require" section
 
 ```json
 "require": {
-  "fortytwo-studio/webfaction-php": "dev-master",
+  "fortytwo-studio/webfaction-php": "^1.0",
 }
 ```
 (don't forget to run `composer install` or `composer update`)
