@@ -873,7 +873,7 @@ class WebFactionClient
     {
         if (in_array($this->version, $versions))
         {
-            throw new WebFactionException("This Version 2 of the API only", 403);
+            throw new WebFactionException("This functionality is not available in version {$this->version} of the API", 403);
         }
     }
 }
