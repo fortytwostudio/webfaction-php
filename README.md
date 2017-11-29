@@ -91,7 +91,7 @@ echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the crede
 ```
 ### Changelog
 
-####29/Nov/2017 - 1.1.1
+#### 29/Nov/2017 - 1.1.1
 * small change to exception message when using an endpoint unavailable to the current version
 * update ReadMe
 
