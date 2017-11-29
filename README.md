@@ -90,6 +90,11 @@ class MyAwesomeClass
 echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the credentials in this example => rut roh, this went wrong: LoginError
 ```
 ### Changelog
+
+####29/Nov/2017 - 1.1.1
+* small change to exception message when using an endpoint unavailable to the current version
+* update ReadMe
+
 #### 29/Nov/2017 - 1.1.0
 * update to handle [Version 2](https://docs.webfaction.com/xmlrpc-api/apiref.html#api-versions) of the Webfaction API. This has support for SSL certificate management.
 * fixed bug where some email methods weren't returning a response 
