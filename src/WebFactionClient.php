@@ -17,6 +17,7 @@ class WebFactionClient
     private $client;
     private $encoder;
     private $sessionId = null;
+    private $version;
 
 
     /**
@@ -25,12 +26,14 @@ class WebFactionClient
      * @param string $username
      * @param string $password
      * @param null   $machine
+     * @param int    $version optional, defaults to version 1, see https://docs.webfaction.com/xmlrpc-api/apiref.html#general
      */
-    public function __construct($username, $password, $machine = null)
+    public function __construct($username, $password, $machine = null, $version = 1)
     {
         $this->client    = new Client('https://api.webfaction.com/');
         $this->encoder   = new Encoder();
-        $this->sessionId = $this->send('login', $username, $password, $machine)[0];
+        $this->version   = $version;
+        $this->sessionId = $this->send('login', $username, $password, $machine, $version)[0];
     }
 
 
@@ -130,19 +133,21 @@ class WebFactionClient
      * @param string $autoresponderFrom
      * @param string $scriptMachine
      * @param string $scriptPath
+     * @return mixed
      */
     public function createEmail($address, $targets, $autoresponderOn = false, $autoresponderSubject = '', $autoresponderMessage = '', $autoresponderFrom = '', $scriptMachine = '', $scriptPath = '')
     {
-        $this->send('create_email', $address, $targets, $autoresponderOn, $autoresponderSubject, $autoresponderMessage, $autoresponderFrom, $scriptMachine, $scriptPath);
+        return $this->send('create_email', $address, $targets, $autoresponderOn, $autoresponderSubject, $autoresponderMessage, $autoresponderFrom, $scriptMachine, $scriptPath);
     }
 
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_email
      * @param string $address
+     * @return mixed
      */
     public function deleteEmail($address)
     {
-        $this->send('delete_email', $address);
+        return $this->send('delete_email', $address);
     }
 
     /**
@@ -171,10 +176,68 @@ class WebFactionClient
     }
 
 
-    /****************************************************************************
-     * Websites and Domains                                                     *
-     * https://docs.webfaction.com/xmlrpc-api/apiref.html#websites-and-domains  *
-     ***************************************************************************/
+    /****************************************************************************************
+     * Websites, Domains and Certificates                                                   *
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#websites-domains-and-certificates *
+     ***************************************************************************************/
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_certificates
+     * @return mixed
+     * @throws WebFactionException
+     */
+    public function listCertificates()
+    {
+        $this->notAvailableInVersions(1);
+
+        return $this->send('list_certificates');
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-create_certificate
+     * @param string $name
+     * @param string $certificate
+     * @param string $privateKey
+     * @param string $intermediates
+     * @return mixed
+     * @throws WebFactionException
+     */
+    public function createCertificate($name, $certificate, $privateKey, $intermediates)
+    {
+        $this->notAvailableInVersions(1);
+
+        return $this->send('create_certificate', $name, $certificate, $privateKey, $intermediates);
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-update_certificate
+     * @param $name
+     * @param $certificate
+     * @param $privateKey
+     * @param $intermediates
+     * @return mixed
+     * @throws WebFactionException
+     */
+    public function updateCertificate($name, $certificate, $privateKey, $intermediates)
+    {
+        $this->notAvailableInVersions(1);
+
+        return $this->send('update_certificate', $name, $certificate, $privateKey, $intermediates);
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_certificate
+     * @param $name
+     * @return mixed
+     * @throws WebFactionException
+     */
+    public function deleteCertificate($name)
+    {
+        $this->notAvailableInVersions(1);
+
+        return $this->send('delete_certificate', $name);
+    }
+
 
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_domains
@@ -225,18 +288,88 @@ class WebFactionClient
         return $this->send('list_websites');
     }
 
+
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-create_website
-     * @param string $name
-     * @param string $ipAddress
-     * @param bool   $https
-     * @param array  $domains
-     * @param array[]  $siteApps
+     * @param array ...$params
+     * @return mixed
+     * @throws WebFactionException
+     */
+    public function createWebsite(...$params)
+    {
+        $name      = array_shift($params);
+        $ipAddress = array_shift($params);
+        $https     = array_shift($params);
+        $domains   = array_shift($params);
+
+        if ($this->version === 1)
+        {
+            $siteApps = $params;
+
+            return $this->createV1Website($name, $ipAddress, $https, $domains, $siteApps);
+        }
+
+        $certificate = array_shift($params);
+        $siteApps    = $params;
+
+        return $this->createV2Website($name, $ipAddress, $https, $domains, $certificate, $siteApps);
+
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-create_website
+     * @param string  $name
+     * @param string  $ipAddress
+     * @param bool    $https
+     * @param array   $domains
+     * @param array[] $siteApps
      * @return mixed
      */
-    public function createWebsite($name, $ipAddress, $https, array $domains, array ...$siteApps)
+    private function createV1Website($name, $ipAddress, $https, array $domains, array...$siteApps)
     {
+
         return $this->send('create_website', $name, $ipAddress, $https, $domains, ...$siteApps);
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-create_website
+     * @param         $name
+     * @param         $ipAddress
+     * @param         $https
+     * @param array   $domains
+     * @param string  $certificate
+     * @param array[] ...$siteApps
+     * @return mixed
+     */
+    private function createV2Website($name, $ipAddress, $https, array $domains, $certificate = '', array...$siteApps)
+    {
+        return $this->send('create_website', $name, $ipAddress, $https, $domains, $certificate, ...$siteApps);
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-update_website
+     * @param array ...$params
+     * @return mixed
+     * @throws WebFactionException
+     */
+    public function updateWebsite(...$params)
+    {
+        $name      = array_shift($params);
+        $ipAddress = array_shift($params);
+        $https     = array_shift($params);
+        $domains   = array_shift($params);
+
+        if ($this->version === 1)
+        {
+            $siteApps = $params;
+
+            return $this->updateV1Website($name, $ipAddress, $https, $domains, $siteApps);
+        }
+
+        $certificate = array_shift($params);
+        $siteApps    = $params;
+
+        return $this->updateV2Website($name, $ipAddress, $https, $domains, $certificate, $siteApps);
     }
 
     /**
@@ -248,9 +381,24 @@ class WebFactionClient
      * @param array  $siteApps
      * @return mixed
      */
-    public function updateWebsite($name, $ipAddress, $https, array $domains, array $siteApps)
+    public function updateV1Website($name, $ipAddress, $https, array $domains, array $siteApps)
     {
         return $this->send('update_website', $name, $ipAddress, $https, $domains, ...$siteApps);
+    }
+
+    /**
+     * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-update_website
+     * @param string $name
+     * @param string $ipAddress
+     * @param bool   $https
+     * @param array  $domains
+     * @param string $certificate
+     * @param array  $siteApps
+     * @return mixed
+     */
+    public function updateV2Website($name, $ipAddress, $https, array $domains, $certificate = '', array $siteApps)
+    {
+        return $this->send('update_website', $name, $ipAddress, $https, $domains, $certificate, ...$siteApps);
     }
 
     /**
@@ -656,7 +804,7 @@ class WebFactionClient
      * @param string $command
      * @return mixed
      */
-    public function system( $command)
+    public function system($command)
     {
         return $this->send('system', $command);
     }
@@ -707,11 +855,25 @@ class WebFactionClient
     public static function generatePassword($length = 42)
     {
         $string = '';
-        while (($len = strlen($string)) < $length) {
-            $size = $length - $len;
-            $bytes = random_bytes($size);
+        while (($len = strlen($string)) < $length)
+        {
+            $size   = $length - $len;
+            $bytes  = random_bytes($size);
             $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
+
         return $string;
+    }
+
+    /**
+     * @param array ...$versions
+     * @throws WebFactionException
+     */
+    private function notAvailableInVersions(...$versions)
+    {
+        if (in_array($this->version, $versions))
+        {
+            throw new WebFactionException("This Version 2 of the API only", 403);
+        }
     }
 }

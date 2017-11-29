@@ -38,7 +38,7 @@ include the client in your project class.
 
 To create a connection to the API new up an instance of the WebFactionClient with your API credentials:
 ```php
-    $wf = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE');
+    $wf = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE', 'VERSION');
 ```
 
 You can then perform interactions with the API using the methods.
@@ -62,7 +62,7 @@ class MyAwesomeClass
         try
         {
             // create a connection to the API, use your own credentials here, obvs
-            $wf = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE');
+            $wf = new WebFactionClient('USERNAME', 'PASSWORD', 'MACHINE', 'VERSION');
 
             // static method to generate random strings of given length
             $db_pass = WebFactionClient::generatePassword(21);
@@ -90,6 +90,11 @@ class MyAwesomeClass
 echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the credentials in this example => rut roh, this went wrong: LoginError
 ```
 ### Changelog
+#### 29/Nov/2017 - 1.1.0
+* update to handle [Version 2](https://docs.webfaction.com/xmlrpc-api/apiref.html#api-versions) of the Webfaction API. This has support for SSL certificate management.
+* fixed bug where some email methods weren't returning a response 
+* update ReadMe
+
 #### 01/Aug/2017 - 1.0.0
 * update phpunit 
 * travis CI build integration
