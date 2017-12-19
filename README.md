@@ -91,6 +91,10 @@ echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the crede
 ```
 ### Changelog
 
+#### 19/Dec/2017 - 1.1.2
+* fixed "Unkown Error" exception on createWebsite on v1 and v2 of the API
+* update ReadMe
+
 #### 29/Nov/2017 - 1.1.1
 * small change to exception message when using an endpoint unavailable to the current version
 * update ReadMe

@@ -306,13 +306,13 @@ class WebFactionClient
         {
             $siteApps = $params;
 
-            return $this->createV1Website($name, $ipAddress, $https, $domains, $siteApps);
+            return $this->createV1Website($name, $ipAddress, $https, $domains, ...$siteApps);
         }
 
         $certificate = array_shift($params);
         $siteApps    = $params;
 
-        return $this->createV2Website($name, $ipAddress, $https, $domains, $certificate, $siteApps);
+        return $this->createV2Website($name, $ipAddress, $https, $domains, $certificate, ...$siteApps);
 
     }
 
