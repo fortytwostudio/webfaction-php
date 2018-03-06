@@ -91,6 +91,10 @@ echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the crede
 ```
 ### Changelog
 
+#### 06/Mar/2018 - 1.1.3
+* altered composer.json to require 4.* of phpxmlrpc
+* update ReadMe
+
 #### 19/Dec/2017 - 1.1.2
 * fixed "Unkown Error" exception on createWebsite on v1 and v2 of the API
 * update ReadMe
