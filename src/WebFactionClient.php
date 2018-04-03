@@ -27,6 +27,7 @@ class WebFactionClient
      * @param string $password
      * @param null   $machine
      * @param int    $version optional, defaults to version 1, see https://docs.webfaction.com/xmlrpc-api/apiref.html#general
+     * @throws WebFactionException
      */
     public function __construct($username, $password, $machine = null, $version = 1)
     {
@@ -45,6 +46,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_disk_usage
      * @return mixed
+     * @throws WebFactionException
      */
     public function listDiskUsage()
     {
@@ -60,6 +62,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_mailboxes
      * @return mixed
+     * @throws WebFactionException
      */
     public function listMailboxes()
     {
@@ -75,6 +78,7 @@ class WebFactionClient
      * @param bool   $useManualProcmailrc
      * @param string $manualProcmailrc
      * @return mixed
+     * @throws WebFactionException
      */
     public function createMailbox($name, $enableSpamPrevention = true, $discardSpam = false, $spamRedirectFolder = '', $useManualProcmailrc = false, $manualProcmailrc = '')
     {
@@ -90,6 +94,7 @@ class WebFactionClient
      * @param bool   $useManualProcmailrc
      * @param string $manualProcmailrc
      * @return mixed
+     * @throws WebFactionException
      */
     public function updateMailbox($name, $enableSpamPrevention = true, $discardSpam = false, $spamRedirectFolder = '', $useManualProcmailrc = false, $manualProcmailrc = '')
     {
@@ -101,6 +106,7 @@ class WebFactionClient
      * @param string $mailbox
      * @param string $password
      * @return mixed
+     * @throws WebFactionException
      */
     public function changeMailboxPassword($mailbox, $password)
     {
@@ -111,6 +117,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_mailbox
      * @param string $name
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteMailbox($name)
     {
@@ -134,6 +141,7 @@ class WebFactionClient
      * @param string $scriptMachine
      * @param string $scriptPath
      * @return mixed
+     * @throws WebFactionException
      */
     public function createEmail($address, $targets, $autoresponderOn = false, $autoresponderSubject = '', $autoresponderMessage = '', $autoresponderFrom = '', $scriptMachine = '', $scriptPath = '')
     {
@@ -144,6 +152,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_email
      * @param string $address
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteEmail($address)
     {
@@ -153,6 +162,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_emails
      * @return mixed
+     * @throws WebFactionException
      */
     public function listEmails()
     {
@@ -169,6 +179,7 @@ class WebFactionClient
      * @param string $autoresponderFrom
      * @param string $scriptMachine
      * @param string $scriptPath
+     * @throws WebFactionException
      */
     public function updateEmail($address, $targets, $autoresponderOn = false, $autoresponderSubject = '', $autoresponderMessage = '', $autoresponderFrom = '', $scriptMachine = '', $scriptPath = '')
     {
@@ -242,6 +253,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_domains
      * @return mixed
+     * @throws WebFactionException
      */
     public function listDomains()
     {
@@ -253,10 +265,11 @@ class WebFactionClient
      * @param string $name
      * @param array  $subdomains
      * @return mixed
+     * @throws WebFactionException
      */
     public function createDomain($name, array $subdomains = [])
     {
-        return $this->send('create_domain', strtolower($name), ...$subdomains);
+        return $this->send('create_domain', \strtolower($name), ...$subdomains);
     }
 
     /**
@@ -264,15 +277,17 @@ class WebFactionClient
      * @param string $name
      * @param array  $subdomains
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteDomain($name, array $subdomains = [])
     {
-        return $this->send('delete_domain', strtolower($name), ...$subdomains);
+        return $this->send('delete_domain', \strtolower($name), ...$subdomains);
     }
 
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_bandwidth_usage
      * @return mixed
+     * @throws WebFactionException
      */
     public function listBandwidthUsage()
     {
@@ -282,6 +297,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_websites
      * @return mixed
+     * @throws WebFactionException
      */
     public function listWebsites()
     {
@@ -297,10 +313,10 @@ class WebFactionClient
      */
     public function createWebsite(...$params)
     {
-        $name      = array_shift($params);
-        $ipAddress = array_shift($params);
-        $https     = array_shift($params);
-        $domains   = array_shift($params);
+        $name      = \array_shift($params);
+        $ipAddress = \array_shift($params);
+        $https     = \array_shift($params);
+        $domains   = \array_shift($params);
 
         if ($this->version === 1)
         {
@@ -309,7 +325,7 @@ class WebFactionClient
             return $this->createV1Website($name, $ipAddress, $https, $domains, ...$siteApps);
         }
 
-        $certificate = array_shift($params);
+        $certificate = \array_shift($params);
         $siteApps    = $params;
 
         return $this->createV2Website($name, $ipAddress, $https, $domains, $certificate, ...$siteApps);
@@ -324,6 +340,7 @@ class WebFactionClient
      * @param array   $domains
      * @param array[] $siteApps
      * @return mixed
+     * @throws WebFactionException
      */
     private function createV1Website($name, $ipAddress, $https, array $domains, array...$siteApps)
     {
@@ -338,8 +355,9 @@ class WebFactionClient
      * @param         $https
      * @param array   $domains
      * @param string  $certificate
-     * @param array[] ...$siteApps
+     * @param array   ...$siteApps
      * @return mixed
+     * @throws WebFactionException
      */
     private function createV2Website($name, $ipAddress, $https, array $domains, $certificate = '', array...$siteApps)
     {
@@ -354,10 +372,10 @@ class WebFactionClient
      */
     public function updateWebsite(...$params)
     {
-        $name      = array_shift($params);
-        $ipAddress = array_shift($params);
-        $https     = array_shift($params);
-        $domains   = array_shift($params);
+        $name      = \array_shift($params);
+        $ipAddress = \array_shift($params);
+        $https     = \array_shift($params);
+        $domains   = \array_shift($params);
 
         if ($this->version === 1)
         {
@@ -366,7 +384,7 @@ class WebFactionClient
             return $this->updateV1Website($name, $ipAddress, $https, $domains, $siteApps);
         }
 
-        $certificate = array_shift($params);
+        $certificate = \array_shift($params);
         $siteApps    = $params;
 
         return $this->updateV2Website($name, $ipAddress, $https, $domains, $certificate, $siteApps);
@@ -380,6 +398,7 @@ class WebFactionClient
      * @param array  $domains
      * @param array  $siteApps
      * @return mixed
+     * @throws WebFactionException
      */
     public function updateV1Website($name, $ipAddress, $https, array $domains, array $siteApps)
     {
@@ -395,6 +414,7 @@ class WebFactionClient
      * @param string $certificate
      * @param array  $siteApps
      * @return mixed
+     * @throws WebFactionException
      */
     public function updateV2Website($name, $ipAddress, $https, array $domains, $certificate = '', array $siteApps)
     {
@@ -407,6 +427,7 @@ class WebFactionClient
      * @param string $ipAddress
      * @param bool   $https
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteWebsite($name, $ipAddress, $https = false)
     {
@@ -422,6 +443,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_app_types
      * @return mixed
+     * @throws WebFactionException
      */
     public function listAppTypes()
     {
@@ -431,6 +453,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_apps
      * @return mixed
+     * @throws WebFactionException
      */
     public function listApps()
     {
@@ -445,6 +468,7 @@ class WebFactionClient
      * @param string $extraInfo
      * @param bool   $openPort
      * @return mixed
+     * @throws WebFactionException
      */
     public function createApp($name, $type, $autostart = false, $extraInfo = '', $openPort = false)
     {
@@ -455,6 +479,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_app
      * @param string $name
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteApp($name)
     {
@@ -471,6 +496,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-create_cronjob
      * @param string $line
      * @return mixed
+     * @throws WebFactionException
      */
     public function createCronJob($line)
     {
@@ -481,6 +507,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_cronjob
      * @param string $line
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteCronJob($line)
     {
@@ -496,6 +523,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_dns_overrides
      * @return mixed
+     * @throws WebFactionException
      */
     public function listDnsOverrides()
     {
@@ -513,6 +541,7 @@ class WebFactionClient
      * @param string $IPV6Address
      * @param string $SRVRecord
      * @return mixed
+     * @throws WebFactionException
      */
     public function createDnsOverride($domain, $ARecord = '', $CNAME = '', $MXName = '', $MXPriority = '', $SPFRecord = '', $IPV6Address = '', $SRVRecord = '')
     {
@@ -530,6 +559,7 @@ class WebFactionClient
      * @param string $IPV6Address
      * @param string $SRVRecord
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteDnsOverride($domain, $ARecord = '', $CNAME = '', $MXName = '', $MXPriority = '', $SPFRecord = '', $IPV6Address = '', $SRVRecord = '')
     {
@@ -545,6 +575,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_dbs
      * @return mixed
+     * @throws WebFactionException
      */
     public function listDbs()
     {
@@ -558,6 +589,7 @@ class WebFactionClient
      * @param string $password
      * @param string $dbUser
      * @return mixed
+     * @throws WebFactionException
      */
     public function createDb($name, $dbType, $password, $dbUser = '')
     {
@@ -572,6 +604,7 @@ class WebFactionClient
      * @param string $dbType
      * @param string $addon
      * @return mixed
+     * @throws WebFactionException
      */
     public function enableAddon($dbName, $dbType, $addon)
     {
@@ -583,6 +616,7 @@ class WebFactionClient
      * @param string $dbName
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteDb($dbName, $dbType)
     {
@@ -592,6 +626,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_db_users
      * @return mixed
+     * @throws WebFactionException
      */
     public function listDbUsers()
     {
@@ -604,6 +639,7 @@ class WebFactionClient
      * @param string $password
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function createDbUser($username, $password, $dbType)
     {
@@ -616,6 +652,7 @@ class WebFactionClient
      * @param string $password
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function changeDbUserPassword($username, $password, $dbType)
     {
@@ -628,6 +665,7 @@ class WebFactionClient
      * @param string $dbName
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function grantDbPermissions($username, $dbName, $dbType)
     {
@@ -640,6 +678,7 @@ class WebFactionClient
      * @param string $dbName
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function makeUserOwnerOfDb($username, $dbName, $dbType)
     {
@@ -652,6 +691,7 @@ class WebFactionClient
      * @param string $dbName
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function revokeDbPermissions($username, $dbName, $dbType)
     {
@@ -663,6 +703,7 @@ class WebFactionClient
      * @param string $username
      * @param string $dbType
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteDbUser($username, $dbType)
     {
@@ -681,6 +722,7 @@ class WebFactionClient
      * @param string $string
      * @param string $mode
      * @return mixed
+     * @throws WebFactionException
      */
     public function writeFile($filename, $string, $mode = "wb")
     {
@@ -689,13 +731,14 @@ class WebFactionClient
 
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-replace_in_file
-     * @param string   $filename
-     * @param \array[] ...$changes
+     * @param string $filename
+     * @param array  ...$changes
      * @return mixed
+     * @throws WebFactionException
      */
     public function replaceInFile($filename, array ...$changes)
     {
-        return $this->send('replace_in_file', $filename, $changes);
+        return $this->send('replace_in_file', $filename, ...$changes);
     }
 
 
@@ -707,6 +750,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_users
      * @return mixed
+     * @throws WebFactionException
      */
     public function listUsers()
     {
@@ -719,6 +763,7 @@ class WebFactionClient
      * @param string $shell
      * @param array  $groups
      * @return mixed
+     * @throws WebFactionException
      */
     public function createUser($username, $shell, array $groups = [])
     {
@@ -730,6 +775,7 @@ class WebFactionClient
      * @param string $username
      * @param string $password
      * @return mixed
+     * @throws WebFactionException
      */
     public function changeUserPassword($username, $password)
     {
@@ -740,6 +786,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-delete_user
      * @param string $username
      * @return mixed
+     * @throws WebFactionException
      */
     public function deleteUser($username)
     {
@@ -755,6 +802,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_ips
      * @return mixed
+     * @throws WebFactionException
      */
     public function listIps()
     {
@@ -764,6 +812,7 @@ class WebFactionClient
     /**
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-list_machines
      * @return mixed
+     * @throws WebFactionException
      */
     public function listMachines()
     {
@@ -781,6 +830,7 @@ class WebFactionClient
      * @param string $scriptPath
      * @param string $codeBefore
      * @return mixed
+     * @throws WebFactionException
      */
     public function runPhpScript($scriptPath, $codeBefore)
     {
@@ -793,6 +843,7 @@ class WebFactionClient
      * @param string          $permissions
      * @param bool            $recursive
      * @return mixed
+     * @throws WebFactionException
      */
     public function setApacheAcl($path, $permissions, $recursive = false)
     {
@@ -803,6 +854,7 @@ class WebFactionClient
      * https://docs.webfaction.com/xmlrpc-api/apiref.html#method-system
      * @param string $command
      * @return mixed
+     * @throws WebFactionException
      */
     public function system($command)
     {
@@ -823,7 +875,7 @@ class WebFactionClient
      */
     private function send($endpoint, ...$options)
     {
-        if ($endpoint !== 'login' && is_null($this->sessionId))
+        if ($endpoint !== 'login' && \is_null($this->sessionId))
         {
             throw new WebFactionException("You are not logged in", 403);
         }
@@ -851,15 +903,16 @@ class WebFactionClient
     /**
      * @param int $length
      * @return string
+     * @throws \Exception
      */
     public static function generatePassword($length = 42)
     {
         $string = '';
-        while (($len = strlen($string)) < $length)
+        while (($len = \strlen($string)) < $length)
         {
             $size   = $length - $len;
-            $bytes  = random_bytes($size);
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+            $bytes  = \random_bytes($size);
+            $string .= \substr(\str_replace(['/', '+', '='], '', \base64_encode($bytes)), 0, $size);
         }
 
         return $string;
@@ -871,7 +924,7 @@ class WebFactionClient
      */
     private function notAvailableInVersions(...$versions)
     {
-        if (in_array($this->version, $versions))
+        if (\in_array($this->version, $versions))
         {
             throw new WebFactionException("This functionality is not available in version {$this->version} of the API", 403);
         }

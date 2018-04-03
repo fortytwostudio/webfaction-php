@@ -91,6 +91,9 @@ echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the crede
 ```
 ### Changelog
 
+#### 03/Apr/2018 - 1.1.4
+* Fixed bug on replaceInFile method where multiple replacements were erroring
+
 #### 06/Mar/2018 - 1.1.3
 * altered composer.json to require 4.* of phpxmlrpc
 * update ReadMe

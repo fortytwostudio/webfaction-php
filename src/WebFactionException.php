@@ -2,7 +2,7 @@
 
 namespace FortyTwoStudio\WebFactionPHP;
 
-use Exception;
+use \Exception;
 
 class WebFactionException extends Exception
 {
