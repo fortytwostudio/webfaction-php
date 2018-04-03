@@ -91,7 +91,11 @@ echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the crede
 ```
 
 ### Testing
-If you wish to check the PHPUnit tests please copy the supplied .env.example file to .env and fill in the webfaction credentials. You can then run `phpunit` to run all the tests.
+The included tests in this package have a LOT of side-effects.
+We don't mock any responses here, they run against your actual webfaction account. 
+(_So one side-effect could be that a new SFTP user is created on your account._) 
+
+If you really wish to check the PHPUnit tests please copy the supplied .env.example file to .env and fill in the webfaction credentials. You can then run `phpunit` to run all the tests.
 Without this setup the tests will fail immediately.
 
 #### _Please note that these tests **will** run commands on your webfaction account, which means that your servers will be affected;_
