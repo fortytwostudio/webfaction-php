@@ -89,6 +89,14 @@ class MyAwesomeClass
 
 echo (new MyAwesomeClass())->createDatabase(); // if you didn't change the credentials in this example => rut roh, this went wrong: LoginError
 ```
+
+### Testing
+If you wish to check the PHPUnit tests please copy the supplied .env.example file to .env and fill in the webfaction credentials. You can then run `phpunit` to run all the tests.
+Without this setup the tests will fail immediately.
+
+#### _Please note that these tests **will** run commands on your webfaction account, which means that your servers will be affected;_
+
+
 ### Changelog
 
 #### 03/Apr/2018 - 1.1.4
